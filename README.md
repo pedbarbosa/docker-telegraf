@@ -10,6 +10,7 @@ Environment variable are named like in the configuration file, e.g. `AGENT_INTER
 - `INPUTS_DOCKER_*`
 - `INPUTS_STATSD_*`
 - `INPUTS_REDIS_*`
+- `INPUTS_CLOUDWATCH_*`
 
 Due to a limitation in the Telegraf configuration the `AGENT_HOSTNAME` settings is currently ignored. As the hostname is always set using `os.Hostname()` it may be changed by settings the containers hostname, e.g. `docker run --hostname myhost ...`.
 
@@ -33,10 +34,13 @@ The StatsD port is not configurable and exposed to its default `8125/udp`.
 
 `INPUTS_REDIS_SERVERS` is set to `["tcp://redis:6379"]` by default.
 
+#### CloudWatch
+
+All `INPUTS_CLOUDWATCH_*` settings related to credentials are ignored since access keys may be passed using the standard `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. Its only possible to pull all metrics from the namespace, because `INPUTS_CLOUDWATCH_METRICS_*` settings are not supported.
+
 ## Example
 
-Assuming your InfluxDB is running in a container named `influxdb` and listening on the default port `8086` and you want to disable the Redis plugin you may execute the following command:
-
+Assuming your InfluxDB is running in a container named `influxdb`, listening on the default port `8086` and you want to only enable the Docker and StatsD plugin you may execute the following command:
 ```
 docker run -d --name telegraf \
     -e AGENT_OMIT_HOSTNAME=true \
