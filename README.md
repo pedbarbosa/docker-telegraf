@@ -1,6 +1,6 @@
 # Telegraf
 
-Telegraf Docker image based on [`telegraf:1.1-alpine`](https://hub.docker.com/_/telegraf/) for use in pure Docker environments, but easily configurable through environment variables.
+Telegraf Docker image based on [`telegraf:1.2-alpine`](https://hub.docker.com/_/telegraf/) for use in pure Docker environments, but easily configurable through environment variables.
 
 ## Configuration
 
@@ -49,6 +49,6 @@ docker run -d --name telegraf \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
     -p 8125:8125/udp \
     --link influxdb \
-  macheins/telegraf:1.1 \
+  macheins/telegraf:1.2 \
     --input-filter "docker:statsd"
 ```
