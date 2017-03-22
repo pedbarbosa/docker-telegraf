@@ -1,6 +1,6 @@
 # Telegraf
 
-Telegraf Docker image based on [`telegraf:1.2-alpine`](https://hub.docker.com/_/telegraf/) for use in pure Docker environments, but easily configurable through environment variables.
+Telegraf Docker image based on [`telegraf:1.2.1`](https://hub.docker.com/_/telegraf/) for use in pure Docker environments, but easily configurable through environment variables.
 
 ## Configuration
 
@@ -25,14 +25,21 @@ Only exceptions from the defaults are listed here.
 
 ## Example
 
-Assuming your InfluxDB is running in a container named `influxdb`, listening on the default port `8086` and you want to only enable the Docker and StatsD plugin you may execute the following command:
 ```
 docker run -d --name telegraf \
-    -e AGENT_OMIT_HOSTNAME=true \
-    -e AGENT_METRIC_BUFFER_LIMIT=100000 \
-    -e AGENT_FLUSH_JITTER=10s \
+    --hostname=$HOSTNAME
+    -e OUTPUTS_INFLUXDB_URLS='["http://influxdb-server-ip:8086"]' \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
-    -p 8125:8125/udp \
-    --link influxdb \
-  macheins/telegraf:1.2 \
+    --restart=always \
+    pedbarbosa/docker-telegraf:1.2.1
+```
+
+## Repository update
+
+```
+docker build .
+DOCKER_IMAGE=$(docker images -q | head -1)
+docker login
+docker tag $DOCKER_IMAGE pedbarbosa/docker-telegraf:1.2.1
+docker push pedbarbosa/docker-telegraf:1.2.1
 ```
