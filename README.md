@@ -8,9 +8,6 @@ Environment variable are named like in the configuration file, e.g. `AGENT_INTER
 - `AGENT_*`
 - `OUTPUTS_INFLUXDB_*`
 - `INPUTS_DOCKER_*`
-- `INPUTS_STATSD_*`
-- `INPUTS_REDIS_*`
-- `INPUTS_CLOUDWATCH_*`
 
 Due to a limitation in the Telegraf configuration the `AGENT_HOSTNAME` settings is currently ignored. As the hostname is always set using `os.Hostname()` it may be changed by settings the containers hostname, e.g. `docker run --hostname myhost ...`.
 
@@ -20,23 +17,11 @@ All plugins, which can be configured using environment variables, are enabled by
 
 #### Outputs
 
-InfluxDB is the only available output plugin. As opposed to the default configuration `OUTPUTS_INFLUXDB_URLS` is initially set to `["http://influxdb:8086"]` which is much more natural to use in a Docker environment and enables the use of standard linking with aliasing, e.g. `--link myinfluxdb:influxdb`. `OUTPUTS_INFLUXDB_RETENTION_POLICY` is set to `autogen` by default and `OUTPUTS_INFLUXDB_SSL_CA_*` settings are currently ignored.
+InfluxDB is the only available output plugin. As opposed to the default configuration `OUTPUTS_INFLUXDB_URLS` is initially set to `["http://localhost:8086"]` which is much more natural to use in a Docker environment and enables the use of standard linking with aliasing, e.g. `--link myinfluxdb:influxdb`. `OUTPUTS_INFLUXDB_RETENTION_POLICY` is set to `autogen` by default and `OUTPUTS_INFLUXDB_SSL_CA_*` settings are currently ignored.
 
 ### Inputs
 
 Only exceptions from the defaults are listed here.
-
-#### StatsD
-
-The StatsD port is not configurable and exposed to its default `8125/udp`.
-
-#### Redis
-
-`INPUTS_REDIS_SERVERS` is set to `["tcp://redis:6379"]` by default.
-
-#### CloudWatch
-
-All `INPUTS_CLOUDWATCH_*` settings related to credentials are ignored since access keys may be passed using the standard `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. Its only possible to pull all metrics from the namespace, because `INPUTS_CLOUDWATCH_METRICS_*` settings are not supported.
 
 ## Example
 
@@ -50,5 +35,4 @@ docker run -d --name telegraf \
     -p 8125:8125/udp \
     --link influxdb \
   macheins/telegraf:1.2 \
-    --input-filter "docker:statsd"
 ```
